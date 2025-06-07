@@ -1,0 +1,11 @@
+# окружение
+carebot-env/
+.env
+
+# PyCharm/VSCode
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
