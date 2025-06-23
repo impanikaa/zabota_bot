@@ -2,16 +2,16 @@ import asyncio
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.filters import StateFilter
-from handlers import user
-from db.session import Session
-from db.models import User
 
+from app.handlers import user
+from app.handlers.user import ProfileStates
+from app.db.session import Session
+from app.db.models import User
+from app.keyboards import get_main_menu, get_support_menu
 from app.db import init_db
-from config import BOT_TOKEN
+from app.config import BOT_TOKEN
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -20,16 +20,30 @@ dp = Dispatcher(storage=MemoryStorage())
 async def start_cmd(message: Message, state: FSMContext):
     session = Session()
     user_id = message.from_user.id
+    is_new = False
 
     if not session.query(User).filter_by(user_id=user_id).first():
         session.add(User(user_id=user_id))
         session.commit()
+        is_new = True  # 👈 это новый пользователь
 
     await message.answer(
         "Привет! Я бот проекта «Заботать!» — психологическая поддержка для олимпиадников 💛\n\nВыбирай нужный раздел в меню ниже.",
         reply_markup=get_main_menu()
     )
 
+    if is_new:
+        await asyncio.sleep(0.3)
+        markup = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="📝 Заполнить анкету", callback_data="fill_profile")]
+            ]
+        )
+        await bot.send_message(
+            chat_id=message.chat.id,
+            text="Хочешь сразу заполнить анкету?",
+            reply_markup=markup
+        )
 
 @dp.message(lambda m: m.text == "📚 Библиотека")
 async def handle_library(message: Message):
@@ -60,26 +74,6 @@ async def handle_about(message: Message):
 @dp.message(lambda m: m.text == "⬅️ Назад")
 async def handle_back(message: Message):
     await message.answer("Главное меню:", reply_markup=get_main_menu())
-
-def get_main_menu():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="📚 Библиотека")],
-            [KeyboardButton(text="⏰ Напоминания")],
-            [KeyboardButton(text="💬 Поддержка")],
-            [KeyboardButton(text="ℹ️ О проекте")],
-        ],
-        resize_keyboard=True
-    )
-
-def get_support_menu():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="👤 Профиль")],
-            [KeyboardButton(text="⬅️ Назад")]
-        ],
-        resize_keyboard=True
-    )
 
 async def main():
     init_db()

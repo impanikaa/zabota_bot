@@ -1,11 +1,11 @@
 from aiogram import Router, F
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, CallbackQuery
 
 from app.db.session import Session
 from app.db.models import User
-from app.main import get_main_menu
+from app.keyboards import get_main_menu
 
 router = Router()
 
@@ -16,9 +16,25 @@ class ProfileStates(StatesGroup):
     username = State()
     consent = State()
 
+@router.callback_query(F.data == "fill_profile")
+async def handle_fill_profile(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await start_profile(callback.message, state)
+
 @router.message(F.text == "📝 Заполнить/обновить")
 async def cmd_profile(message: Message, state: FSMContext):
-    await message.answer("Какой у тебя класс? (от 1 до 11)")
+    await start_profile(message, state)
+
+async def start_profile(message: Message, state: FSMContext):
+    session = Session()
+    user_id = message.from_user.id
+    user = session.query(User).filter_by(user_id=user_id).first()
+    if not user:
+        user = User(user_id=user_id)
+        session.add(user)
+        session.commit()
+
+    await message.answer("Какой у тебя класс? (от 7 до 11)")
     await state.set_state(ProfileStates.grade)
 
 @router.message(ProfileStates.grade)
@@ -84,7 +100,7 @@ async def set_consent(message: Message, state: FSMContext):
     user = session.query(User).filter_by(user_id=message.from_user.id).first()
 
     if not user:
-        await message.answer("Что-то пошло не так. Попробуй снова /start.")
+        await message.answer("Что-то пошло не так. Попробуй ещё раз с /start или 📝 «Заполнить/обновить».")
         await state.clear()
         return
 
