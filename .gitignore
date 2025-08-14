@@ -1,6 +1,7 @@
 # окружение
 carebot-env/
 .env
+data.db
 
 # PyCharm/VSCode
 .idea/
