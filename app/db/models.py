@@ -12,5 +12,4 @@ class User(Base):
     grade = Column(Integer, nullable=True)            # Класс
     subjects = Column(String, nullable=True)          # Через запятую
     consent = Column(Boolean, default=False)          # Согласие
-    is_owner = Column(Boolean, default=False)          # Владелец
-    is_admin = Column(Boolean, default=False)          # Админ
+    role = Column(Integer, default=0)

@@ -6,12 +6,13 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKe
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from app.handlers import user
-from app.handlers.user import ProfileStates
+from app.handlers import admin
 from app.db.session import Session
 from app.db.models import User
 from app.keyboards import get_main_menu, get_support_menu
 from app.db import init_db
 from app.config import BOT_TOKEN
+from app.utils.roles import get_user_role
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -21,6 +22,7 @@ async def start_cmd(message: Message, state: FSMContext):
     session = Session()
     user_id = message.from_user.id
     is_new = False
+    role = get_user_role(user_id)
 
     if not session.query(User).filter_by(user_id=user_id).first():
         session.add(User(user_id=user_id))
@@ -29,7 +31,7 @@ async def start_cmd(message: Message, state: FSMContext):
 
     await message.answer(
         "Привет! Я бот проекта «Заботать!» — психологическая поддержка для олимпиадников 💛\n\nВыбирай нужный раздел в меню ниже.",
-        reply_markup=get_main_menu()
+        reply_markup=get_main_menu(role)
     )
 
     if is_new:
@@ -75,10 +77,15 @@ async def handle_about(message: Message):
 async def handle_back(message: Message):
     await message.answer("Главное меню:", reply_markup=get_main_menu())
 
+@dp.message(F.text == "/myid")
+async def get_my_id(message: Message):
+    await message.answer(f"Твой user_id: {message.from_user.id}\nТвой username: @{message.from_user.username or 'нет'}")
+
 async def main():
     init_db()
     print("Бот запускается...")
     dp.include_router(user.router)
+    dp.include_router(admin.router)
     await dp.start_polling(bot)
     print("Бот запущен!")
 

@@ -1,15 +1,18 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-def get_main_menu():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="📚 Библиотека")],
-            [KeyboardButton(text="⏰ Напоминания")],
-            [KeyboardButton(text="💬 Поддержка")],
-            [KeyboardButton(text="ℹ️ О проекте")],
-        ],
-        resize_keyboard=True
-    )
+def get_main_menu(role: int):
+    base = [
+        [KeyboardButton(text="📚 Библиотека")],
+        [KeyboardButton(text="⏰ Напоминания")],
+        [KeyboardButton(text="💬 Поддержка")],
+        [KeyboardButton(text="ℹ️ О проекте")],
+    ]
+    if role == 1:
+        base.append([KeyboardButton(text="🛠 Админка")])
+    elif role == 2:
+        base.append([KeyboardButton(text="👑 Суперадминка")])
+    return ReplyKeyboardMarkup(keyboard=base, resize_keyboard=True)
+
 
 def get_support_menu():
     return ReplyKeyboardMarkup(
