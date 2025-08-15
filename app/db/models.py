@@ -6,10 +6,13 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
 
-    user_id = Column(Integer, primary_key=True)       # Telegram ID
-    username = Column(String)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, unique=True, nullable=False)
+
+    grade = Column(Integer, nullable=True)
+    subjects = Column(String, nullable=True)
     region = Column(String, nullable=True)
-    grade = Column(Integer, nullable=True)            # Класс
-    subjects = Column(String, nullable=True)          # Через запятую
-    consent = Column(Boolean, default=False)          # Согласие
-    role = Column(Integer, default=0)
+    username = Column(String, nullable=True)
+    consent = Column(Boolean, default=False)
+
+    role = Column(Integer, default=0, nullable=False)

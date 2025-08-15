@@ -6,6 +6,7 @@ from aiogram.types import Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, Key
 from app.db.session import Session
 from app.db.models import User
 from app.keyboards import get_main_menu
+from app.utils.roles import get_user_role
 
 router = Router()
 
@@ -15,6 +16,7 @@ class ProfileStates(StatesGroup):
     region = State()
     username = State()
     consent = State()
+    role = 0
 
 @router.callback_query(F.data == "fill_profile")
 async def handle_fill_profile(callback: CallbackQuery, state: FSMContext):
@@ -114,7 +116,7 @@ async def set_consent(message: Message, state: FSMContext):
 
         await message.answer(
             "Анкета удалена ❌, так как ты не дал(а) согласие на обработку данных.",
-            reply_markup=get_main_menu()
+            reply_markup=get_main_menu(get_user_role(message.from_user.id))
         )
         await state.clear()
         return
@@ -127,7 +129,8 @@ async def set_consent(message: Message, state: FSMContext):
     user.consent = True
     session.commit()
 
-    await message.answer("Спасибо! Профиль обновлён ✅", reply_markup=get_main_menu())
+    role = get_user_role(message.from_user.id)
+    await message.answer("Спасибо! Профиль обновлён ✅", reply_markup=get_main_menu(role))
     await state.clear()
 
 @router.message(F.text == "👤 Профиль")

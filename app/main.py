@@ -27,7 +27,7 @@ async def start_cmd(message: Message, state: FSMContext):
     if not session.query(User).filter_by(user_id=user_id).first():
         session.add(User(user_id=user_id))
         session.commit()
-        is_new = True  # 👈 это новый пользователь
+        is_new = True
 
     await message.answer(
         "Привет! Я бот проекта «Заботать!» — психологическая поддержка для олимпиадников 💛\n\nВыбирай нужный раздел в меню ниже.",
@@ -75,7 +75,8 @@ async def handle_about(message: Message):
 
 @dp.message(lambda m: m.text == "⬅️ Назад")
 async def handle_back(message: Message):
-    await message.answer("Главное меню:", reply_markup=get_main_menu())
+    role = get_user_role(message.from_user.id)
+    await message.answer("Главное меню:", reply_markup=get_main_menu(role))
 
 @dp.message(F.text == "/myid")
 async def get_my_id(message: Message):
