@@ -7,10 +7,8 @@ def get_main_menu(role: int):
         [KeyboardButton(text="💬 Поддержка")],
         [KeyboardButton(text="ℹ️ О проекте")],
     ]
-    if role == 1:
+    if role >= 1:
         base.append([KeyboardButton(text="🛠 Админка")])
-    elif role == 2:
-        base.append([KeyboardButton(text="👑 Суперадминка")])
     return ReplyKeyboardMarkup(keyboard=base, resize_keyboard=True)
 
 

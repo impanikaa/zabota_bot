@@ -5,13 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eded040d-34ee-4396-94f2-8b313ecefaad" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/library_admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/admin_commands.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/data.db" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/db/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/handlers/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/handlers/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/handlers/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/handlers/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/keyboards.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/keyboards.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/roles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/library.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/library.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,13 +44,22 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Python.clear_db.executor&quot;: &quot;Run&quot;,
     &quot;Python.config.executor&quot;: &quot;Run&quot;,
+    &quot;Python.library.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\web\zabota_bot\app" />
+      <recent name="D:\web\zabota_bot" />
+      <recent name="D:\web\zabota_bot\app\services" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

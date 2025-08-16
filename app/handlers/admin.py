@@ -1,13 +1,17 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message
-from app.filters.role import RoleFilter
+from app.utils.roles import get_user_role
+from app.utils.admin_commands import format_admin_commands
 
 router = Router()
 
-@router.message(RoleFilter(min_role=1))  # админы и выше
-async def admin_menu(message: Message):
-    await message.answer("Добро пожаловать в админку 🛠")
 
-@router.message(RoleFilter(min_role=2))  # только владелец
-async def owner_panel(message: Message):
-    await message.answer("Это суперадминка 👑")
+@router.message(F.text == "🛠 Админка")
+async def admin_panel(message: Message):
+    role = get_user_role(message.from_user.id)
+    if role < 1:
+        return await message.answer("⛔ У тебя нет доступа к админке.")
+
+    text = format_admin_commands(is_superadmin=(role == 2))
+    await message.answer(text, parse_mode="HTML")
+

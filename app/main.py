@@ -2,14 +2,14 @@ import asyncio
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from app.handlers import user
-from app.handlers import admin
+from app.handlers import user, admin
+from app.services import library, library_admin
 from app.db.session import Session
 from app.db.models import User
-from app.keyboards import get_main_menu, get_support_menu
+from app.keyboards import get_main_menu
 from app.db import init_db
 from app.config import BOT_TOKEN
 from app.utils.roles import get_user_role
@@ -24,8 +24,8 @@ async def start_cmd(message: Message, state: FSMContext):
     is_new = False
     role = get_user_role(user_id)
 
-    if not session.query(User).filter_by(user_id=user_id).first():
-        session.add(User(user_id=user_id))
+    if user_id != bot.id and not session.query(User).filter_by(user_id=user_id).first():
+        session.add(User(user_id=user_id, role=0))
         session.commit()
         is_new = True
 
@@ -47,9 +47,6 @@ async def start_cmd(message: Message, state: FSMContext):
             reply_markup=markup
         )
 
-@dp.message(lambda m: m.text == "📚 Библиотека")
-async def handle_library(message: Message):
-    await message.answer("📚 В будущем здесь будет библиотека статей. Пока она в разработке!")
 
 @dp.message(lambda m: m.text == "⏰ Напоминания")
 async def handle_reminders(message: Message):
@@ -87,8 +84,10 @@ async def main():
     print("Бот запускается...")
     dp.include_router(user.router)
     dp.include_router(admin.router)
+    dp.include_router(library.router)
+    dp.include_router(library_admin.router)
     await dp.start_polling(bot)
-    print("Бот запущен!")
+    # print("Бот запущен!")
 
 if __name__ == "__main__":
     asyncio.run(main())
