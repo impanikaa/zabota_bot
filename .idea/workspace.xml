@@ -5,16 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eded040d-34ee-4396-94f2-8b313ecefaad" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/library_admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/admin_commands.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/feedback_admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/db/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/handlers/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/handlers/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/keyboards.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/keyboards.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/handlers/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/handlers/user.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/library.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/library.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/feedback.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/feedback.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

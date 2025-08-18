@@ -39,22 +39,32 @@ async def start_profile(message: Message, state: FSMContext):
     await message.answer("Какой у тебя класс? (от 7 до 11)")
     await state.set_state(ProfileStates.grade)
 
+
 @router.message(ProfileStates.grade)
 async def set_grade(message: Message, state: FSMContext):
-    try:
-        grade = int(message.text.strip())
-        if grade not in range(1, 12):
-            raise ValueError
-    except ValueError:
-        return await message.answer("Пожалуйста, введи целое число от 1 до 11.")
-    await state.update_data(grade=grade)
-    await message.answer("Какие предметы ты пишешь на олимпиадах, сдаёшь или любишь? (через запятую)")
+    if message.text.strip() == "-":
+        await state.update_data(grade=None)
+    else:
+        try:
+            grade = int(message.text.strip())
+            if grade not in range(1, 12):
+                raise ValueError
+            await state.update_data(grade=grade)
+        except ValueError:
+            return await message.answer("Пожалуйста, введи целое число от 1 до 11 или '-' чтобы пропустить.")
+
+    await message.answer("Какие предметы? (через запятую или '-' чтобы пропустить)")
     await state.set_state(ProfileStates.subjects)
+
 
 @router.message(ProfileStates.subjects)
 async def set_subjects(message: Message, state: FSMContext):
-    await state.update_data(subjects=message.text.strip())
-    await message.answer("Из какого ты региона/города?")
+    if message.text.strip() == "-":
+        await state.update_data(subjects=None)
+    else:
+        await state.update_data(subjects=message.text.strip())
+
+    await message.answer("Из какого региона? (или '-' чтобы пропустить)")
     await state.set_state(ProfileStates.region)
 
 @router.message(ProfileStates.region)
