@@ -6,7 +6,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKe
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from app.handlers import user, admin
-from app.services import library, library_admin, feedback, feedback_admin
+from app.services import library, library_admin, feedback, feedback_admin, chat, chat_admin, question, question_admin
 from app.db.session import Session
 from app.db.models import User
 from app.keyboards import get_main_menu
@@ -88,6 +88,10 @@ async def main():
     dp.include_router(library_admin.router)
     dp.include_router(feedback.router)
     dp.include_router(feedback_admin.router)
+    dp.include_router(chat.router)
+    dp.include_router(chat_admin.router)
+    dp.include_router(question.router)
+    dp.include_router(question_admin.router)
     await dp.start_polling(bot)
     # print("Бот запущен!")
 

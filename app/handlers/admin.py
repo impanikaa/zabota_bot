@@ -5,7 +5,6 @@ from app.utils.admin_commands import format_admin_commands
 
 router = Router()
 
-
 @router.message(F.text == "🛠 Админка")
 async def admin_panel(message: Message):
     role = get_user_role(message.from_user.id)
@@ -15,7 +14,11 @@ async def admin_panel(message: Message):
     markup = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="💌 Отзывы")],
+            [KeyboardButton(text="💬 Болталка")],
+            [KeyboardButton(text="❓ Вопросы админу")],
             [KeyboardButton(text="📝 Отметить прочитанным")],
+            [KeyboardButton(text="📝 Отметить опубликованным")],
+            [KeyboardButton(text="📝 Ответить на вопрос")],
             [KeyboardButton(text="⬅️ Назад")]
         ],
         resize_keyboard=True
@@ -25,4 +28,3 @@ async def admin_panel(message: Message):
 
     text = format_admin_commands(is_superadmin=(role == 2))
     await message.answer(text, parse_mode="HTML")
-

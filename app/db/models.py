@@ -36,7 +36,13 @@ class Feedback(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"))
     text = Column(String, nullable=False)
     include_profile = Column(Boolean, default=False)
-    read_by = Column(Text, default="")  # Список ID админов, прочитавших отзыв
+    read_by = Column(Text, default="")
     created_at = Column(DateTime, default=datetime.utcnow)
+    request_type = Column(String, default='feedback')  # 'feedback', 'chat', 'question'
+    # Для болталки:
+    can_publish = Column(Boolean, default=True)
+    is_published = Column(Boolean, default=False)
+    post_link = Column(String, nullable=True)
+    is_hidden = Column(Boolean, default=False)
 
     user = relationship("User", back_populates="feedbacks")
