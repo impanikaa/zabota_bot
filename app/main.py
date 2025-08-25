@@ -4,9 +4,11 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.storage.memory import MemoryStorage
+import logging
 
 from app.handlers import user, admin
-from app.services import library, library_admin, feedback, feedback_admin, chat, chat_admin, question, question_admin
+from app.services import (library, library_admin, feedback, feedback_admin, chat, chat_admin, question,
+                          question_admin, reminders_admin, reminders)
 from app.db.session import Session
 from app.db.models import User
 from app.keyboards import get_main_menu
@@ -14,8 +16,13 @@ from app.db import init_db
 from app.config import BOT_TOKEN
 from app.utils.roles import get_user_role
 
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
+
 
 @dp.message(CommandStart())
 async def start_cmd(message: Message, state: FSMContext):
@@ -48,10 +55,6 @@ async def start_cmd(message: Message, state: FSMContext):
         )
 
 
-@dp.message(lambda m: m.text == "⏰ Напоминания")
-async def handle_reminders(message: Message):
-    await message.answer("⏰ Здесь можно будет настроить напоминания. Скоро будет доступно!")
-
 @dp.message(lambda m: m.text == "💬 Поддержка")
 async def handle_support(message: Message):
     markup = ReplyKeyboardMarkup(
@@ -66,22 +69,39 @@ async def handle_support(message: Message):
     )
     await message.answer("Вот, что могу предложить для поддержки:", reply_markup=markup)
 
+
 @dp.message(lambda m: m.text == "ℹ️ О проекте")
 async def handle_about(message: Message):
-    await message.answer("ℹ️ «Заботать!» — проект психологической поддержки олимпиадников. Подробнее: https://zabota-olymp.ru")
+    await message.answer(
+        "ℹ️ «Заботать!» — проект психологической поддержки олимпиадников. Подробнее: https://zabota-olymp.ru")
+
 
 @dp.message(lambda m: m.text == "⬅️ Назад")
 async def handle_back(message: Message):
     role = get_user_role(message.from_user.id)
     await message.answer("Главное меню:", reply_markup=get_main_menu(role))
 
+
 @dp.message(F.text == "/myid")
 async def get_my_id(message: Message):
     await message.answer(f"Твой user_id: {message.from_user.id}\nТвой username: @{message.from_user.username or 'нет'}")
 
+
+@dp.message(F.text == "/check_scheduler")
+async def check_scheduler(message: Message):
+    """Проверка состояния планировщика"""
+    from app.services.reminder_service import scheduler
+    jobs = scheduler.get_jobs()
+    await message.answer(f"Планировщик работает. Заданий в очереди: {len(jobs)}")
+
+
 async def main():
     init_db()
-    print("Бот запускается...")
+    logger.info("Бот запускается...")
+
+    # Планировщик уже инициализирован при импорте модуля
+
+    # Подключаем роутеры
     dp.include_router(user.router)
     dp.include_router(admin.router)
     dp.include_router(library.router)
@@ -92,8 +112,12 @@ async def main():
     dp.include_router(chat_admin.router)
     dp.include_router(question.router)
     dp.include_router(question_admin.router)
+    dp.include_router(reminders.router)
+    dp.include_router(reminders_admin.router)
+
+    # Запускаем бота
     await dp.start_polling(bot)
-    # print("Бот запущен!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

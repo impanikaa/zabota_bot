@@ -46,3 +46,44 @@ class Feedback(Base):
     is_hidden = Column(Boolean, default=False)
 
     user = relationship("User", back_populates="feedbacks")
+
+
+class UserReminder(Base):
+    __tablename__ = "user_reminders"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+    type = Column(String)  # 'habit' или 'quote'
+    habit_type = Column(String, nullable=True)  # Для предустановленных привычек
+    custom_text = Column(String, nullable=True)  # Для кастомных привычек
+    schedule_type = Column(String)  # 'fixed', 'interval', или 'random'
+    times = Column(String, nullable=True)  # JSON для fixed времени
+    interval_hours = Column(Integer, nullable=True)  # Для интервальных
+    random_interval_hours = Column(Integer, nullable=True)  # Для случайных интервалов (в часах)
+    start_time = Column(String, nullable=True)  # Начало периода отправки (может быть NULL)
+    end_time = Column(String, nullable=True)  # Конец периода отправки (может быть NULL)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User")
+
+
+class ReminderStat(Base):
+    __tablename__ = "reminder_stats"
+
+    id = Column(Integer, primary_key=True)
+    reminder_id = Column(Integer, ForeignKey("user_reminders.id"))
+    sent_at = Column(DateTime, default=datetime.utcnow)
+    status = Column(String)  # 'sent', 'skipped_quiet_time', 'error'
+
+    reminder = relationship("UserReminder")
+
+
+class Quote(Base):
+    __tablename__ = "quotes"
+
+    id = Column(Integer, primary_key=True)
+    text = Column(Text, nullable=False)
+    category = Column(String)  # Для категоризации цитат
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

@@ -11,17 +11,24 @@ from app.utils.format import format_user_info
 
 router = Router()
 
+
 class ChatStates(StatesGroup):
     waiting_problem = State()
     waiting_permissions = State()
 
+
 @router.message(F.text == "🙏 #болталка")
 async def start_chat(message: Message, state: FSMContext):
     await message.answer(
-        "💬 Расскажи о своей проблеме или ситуации, которой хочешь поделиться.",
+        f'💬 Расскажи о своей проблеме или ситуации, которой хочешь поделиться.\n\nМы её опубликуем в тг-канале '
+        f'<a href="https://t.me/zabota_olymp">"заботать!"</a>, а ребята в комментариях смогут тебя поддержать или даже '
+        f'чем-то помочь!\n'
+        f'<i>У тебя будет возможность отказаться от публикации или сделать её анонимной (не покажем твои данные из анкеты)</i>',
+        parse_mode='HTML',
         reply_markup=ReplyKeyboardRemove()
     )
     await state.set_state(ChatStates.waiting_problem)
+
 
 @router.message(ChatStates.waiting_problem)
 async def process_problem(message: Message, state: FSMContext):
@@ -30,7 +37,7 @@ async def process_problem(message: Message, state: FSMContext):
     markup = InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text="✅ Всё разрешаю", callback_data="permission_yes_yes"),
-            InlineKeyboardButton(text="📝 Только опубликовать", callback_data="permission_yes_no")
+            InlineKeyboardButton(text="📝 Анонимно опубликовать", callback_data="permission_yes_no")
         ],
         [
             InlineKeyboardButton(text="👤 Только профиль", callback_data="permission_no_yes"),
@@ -40,13 +47,14 @@ async def process_problem(message: Message, state: FSMContext):
 
     await message.answer(
         "Что разрешаешь?\n\n"
-        "• ✅ Всё - опубликовать и использовать профиль\n"
-        "• 📝 Только опубликовать (без профиля)\n"
-        "• 👤 Только использовать профиль (не публиковать)\n"
-        "• ❌ Ничего не разрешаю",
+        "• ✅ Всё - опубликовать проблему с указанием данных из анкеты (username в тг, регион, класс, предметы)\n"
+        "• 📝 Анонимно опубликовать (без профиля)\n"
+        "• 👤 Сохранить с данными из анкеты (не публиковать)\n"
+        "• ❌ Ничего не разрешаю (сохранить анонимно)",
         reply_markup=markup
     )
     await state.set_state(ChatStates.waiting_permissions)
+
 
 @router.callback_query(ChatStates.waiting_permissions, F.data.startswith("permission_"))
 async def process_permissions(call: CallbackQuery, state: FSMContext):
@@ -55,7 +63,7 @@ async def process_permissions(call: CallbackQuery, state: FSMContext):
     problem_text = data.get("problem_text", "")
 
     if not problem_text:
-        await call.message.answer("❌ Произошла ошибка. Попробуйте начать заново.")
+        await call.message.answer('❌ Произошла ошибка. Попробуйте начать заново или напишите в "Вопросы администраторам".')
         await state.clear()
         return
 
@@ -75,7 +83,7 @@ async def process_permissions(call: CallbackQuery, state: FSMContext):
     session.add(fb)
     session.commit()
 
-    response_text = "💛 Спасибо! Твой вопрос сохранён."
+    response_text = "💛 Спасибо за доверие! Твой вопрос сохранён."
     if not can_publish:
         response_text += " Он не будет опубликован."
     if include_profile:
