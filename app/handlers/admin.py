@@ -13,10 +13,11 @@ async def admin_panel(message: Message):
 
     markup = ReplyKeyboardMarkup(
         keyboard=[
+            [KeyboardButton(text="📢 Рассылка")],
             [KeyboardButton(text="💌 Отзывы")],
             [KeyboardButton(text="💬 Болталка")],
-            [KeyboardButton(text="❓ Вопросы админу")],
-            [KeyboardButton(text="📝 Управление цитатами")],  # Новая кнопка
+            [KeyboardButton(text="❓ Вопросы админам")],
+            [KeyboardButton(text="✏️ Управление цитатами")],
             [KeyboardButton(text="📝 Отметить прочитанным")],
             [KeyboardButton(text="📝 Отметить опубликованным")],
             [KeyboardButton(text="📝 Ответить на вопрос")],

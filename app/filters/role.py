@@ -3,6 +3,7 @@ from aiogram.types import Message
 from app.db.session import Session
 from app.db.models import User
 
+
 class RoleFilter(BaseFilter):
     def __init__(self, min_role: int):
         self.min_role = min_role

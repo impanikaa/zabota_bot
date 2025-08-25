@@ -10,7 +10,8 @@ ADMIN_COMMANDS = {
     "/hide_question [ID]": "Скрыть вопрос администрации",
     "/add_quote": "Добавить цитату (пошагово)",
     "/list_quotes": "Показать список цитат",
-    "/quote_stats": "Статистика цитат"
+    "/quote_stats": "Статистика цитат",
+    "/broadcast": "Сделать рассылку всем пользователям"
 }
 
 SUPERADMIN_COMMANDS = {
@@ -18,6 +19,7 @@ SUPERADMIN_COMMANDS = {
     "/remove_admin [id]": "Удалить админа",
     "/list_admins": "Показать список всех админов"
 }
+
 
 def format_admin_commands(is_superadmin: bool = False) -> str:
     text = "📋 <b>Команды администратора:</b>\n\n"

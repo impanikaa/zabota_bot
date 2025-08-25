@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -18,6 +19,7 @@ class User(Base):
     consent = Column(Boolean, default=False)
     role = Column(Integer, default=0, nullable=False)
     feedbacks = relationship("Feedback", back_populates="user")
+
 
 class Article(Base):
     __tablename__ = "articles"

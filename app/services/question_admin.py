@@ -18,7 +18,7 @@ class HideQuestionStates(StatesGroup):
     waiting_question_id = State()
 
 
-@router.message(F.text == "❓ Вопросы админу")
+@router.message(F.text == "❓ Вопросы админам")
 async def question_panel(message: Message):
     role = get_user_role(message.from_user.id)
     if role < 1:

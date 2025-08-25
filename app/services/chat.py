@@ -63,7 +63,7 @@ async def process_permissions(call: CallbackQuery, state: FSMContext):
     problem_text = data.get("problem_text", "")
 
     if not problem_text:
-        await call.message.answer('❌ Произошла ошибка. Попробуйте начать заново или напишите в "Вопросы администраторам".')
+        await call.message.answer('❌ Произошла ошибка. Попробуйте начать заново, введите /start или напишите в "Вопросы администраторам".')
         await state.clear()
         return
 

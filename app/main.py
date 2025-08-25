@@ -6,7 +6,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKe
 from aiogram.fsm.storage.memory import MemoryStorage
 import logging
 
-from app.handlers import user, admin
+from app.handlers import user, admin, broadcast, superadmin
 from app.services import (library, library_admin, feedback, feedback_admin, chat, chat_admin, question,
                           question_admin, reminders_admin, reminders)
 from app.db.session import Session
@@ -104,6 +104,8 @@ async def main():
     # Подключаем роутеры
     dp.include_router(user.router)
     dp.include_router(admin.router)
+    dp.include_router(broadcast.router)
+    dp.include_router(superadmin.router)
     dp.include_router(library.router)
     dp.include_router(library_admin.router)
     dp.include_router(feedback.router)

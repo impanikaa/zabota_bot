@@ -16,7 +16,7 @@ class QuoteStates(StatesGroup):
     waiting_category = State()
 
 
-@router.message(F.text == "📝 Управление цитатами")
+@router.message(F.text == "✏️ Управление цитатами")
 async def manage_quotes(message: Message):
     role = get_user_role(message.from_user.id)
     if role < 1:

@@ -28,14 +28,14 @@ async def feedback_text(message: Message, state: FSMContext):
             [InlineKeyboardButton(text="Нет", callback_data="profile_no")]
         ]
     )
-    await message.answer("Добавить данные из анкеты (регион, класс и т.п.)?", reply_markup=markup)
+    await message.answer("Добавить данные из анкеты (регион, класс, предметы и юзернейм)?", reply_markup=markup)
     await state.set_state(FeedbackForm.waiting_profile_permission)
 
 @router.callback_query(F.data.in_(["profile_yes", "profile_no"]))
 async def feedback_save(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     if "text" not in data:
-        await call.message.answer("❌ Произошла ошибка. Попробуйте начать заново.")
+        await call.message.answer("❌ Произошла ошибка. Попробуйте начать заново или введите /start.")
         await state.clear()
         return
 
